@@ -29,14 +29,14 @@ WORD Pyramidindices[] =
 
 TexturedVertex CubeverticesTextured[] =
 {
-	{ XMFLOAT3(1.0f,  2.0f,  -1.0f), XMFLOAT2(1.0f, 1.0f) , XMFLOAT3(1.0f,1.0f,1.0f) },
-	{ XMFLOAT3(-1.0f,  2.0f,  1.0f), XMFLOAT2(0.0f, 0.0f) , XMFLOAT3(1.0f,1.0f,1.0f)},
+	{ XMFLOAT3(1.0f,  2.0f,  -1.0f), XMFLOAT2(1.0f, 1.0f) , XMFLOAT3(1.0f,1.0f,-1.0f) },
+	{ XMFLOAT3(-1.0f,  2.0f,  1.0f), XMFLOAT2(0.0f, 0.0f) , XMFLOAT3(-1.0f,1.0f,1.0f)},
 	{ XMFLOAT3(1.0f,  2.0f,  1.0f),  XMFLOAT2(1.0f, 0.0f) , XMFLOAT3(1.0f,1.0f,1.0f)},
-	{ XMFLOAT3(-1.0f,  2.0f,  -1.0f),XMFLOAT2(0.0f, 1.0f) , XMFLOAT3(1.0f,1.0f,1.0f)},
-	{ XMFLOAT3(-1.0f,  0.0f, -1.0f), XMFLOAT2(0.0f, 0.0f) , XMFLOAT3(1.0f,1.0f,1.0f)},
-	{ XMFLOAT3(1.0f,  0.0f, -1.0f),  XMFLOAT2(1.0f, 0.0f) , XMFLOAT3(1.0f,1.0f,1.0f)},
-	{ XMFLOAT3(-1.0f,  0.0f,  1.0f), XMFLOAT2(1.0f, 1.0f) , XMFLOAT3(1.0f,1.0f,1.0f)},
-	{ XMFLOAT3(1.0f,  0.0f,  1.0f),  XMFLOAT2(0.0f, 0.0f) , XMFLOAT3(1.0f,1.0f,1.0f)}
+	{ XMFLOAT3(-1.0f,  2.0f,  -1.0f),XMFLOAT2(0.0f, 1.0f) , XMFLOAT3(-1.0f,1.0f,-1.0f)},
+	{ XMFLOAT3(-1.0f,  0.0f, -1.0f), XMFLOAT2(0.0f, 0.0f) , XMFLOAT3(-1.0f,-1.0f,-1.0f)},
+	{ XMFLOAT3(1.0f,  0.0f, -1.0f),  XMFLOAT2(1.0f, 0.0f) , XMFLOAT3(1.0f,-1.0f,-1.0f)},
+	{ XMFLOAT3(-1.0f,  0.0f,  1.0f), XMFLOAT2(1.0f, 1.0f) , XMFLOAT3(-1.0f,-1.0f,1.0f)},
+	{ XMFLOAT3(1.0f,  0.0f,  1.0f),  XMFLOAT2(0.0f, 0.0f) , XMFLOAT3(1.0f,-1.0f,1.0f)}
 };
 
 TexturedVertex PlaneVertex[] =
@@ -88,6 +88,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	{
 		Framework::instanse().Initialize("WindowXD");
 
+		Framework::instanse().DirLight = new DirectionalLight(XMVector4Normalize(XMVectorSet(1.0f,-1.0f,1.0f,0.0f)),XMFLOAT4(1.0f,1.0f,1.0f,1.0f));
+
 		auto *PyrMR = new MeshRendererUI(Pyramidvertices, Pyramidindices, 18, 5);
 		if (FAILED(PyrMR->InitShader("Shaders.fx", "VSUI", "PSUI")))
 		{
@@ -125,12 +127,25 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 			throw 1;
 		}
 		
+		auto torus = new MeshRendererTextured("torus.obj", "aquafish01.png");
+		torus->LoadFromObj();
+		if (FAILED(torus->InitShader("Shaders.fx", "VSTEX", "PSTEX")))
+		{
+			std::cout << "\nfailed init shader shaders vstex pstex3";
+			throw 1;
+		}
+
 		if (FAILED(Fish->InitMesh()))
 		{
 			std::cout << "\nfailed init mesh";
 			throw 1;
 		}
 		
+		if (FAILED(torus->InitMesh()))
+		{
+			std::cout << "\nfailed init mesh";
+			throw 1;
+		}
 
 		if (FAILED(PyrMR->InitMesh()))
 		{
@@ -171,14 +186,14 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		P1->transform->Position = XMVectorSet(-0.5f, -0.0f, 0.5f, 0.0f);
 		P1->transform->LocalScale = XMVectorSet(0.5f, 0.5f, 0.5f, 0.0f) / 3;
 
-		Plane->transform->Position = XMVectorSet(0.0f, -5.0f, 0.0f, 0.0f);
-		Plane->transform->LocalScale = XMVectorSet(10.0f, 1.f, 10.0f, 0.0f);
+		Plane->transform->Position = XMVectorSet(-5.0f, 0.0f, -5.0f, 0.0f);
+		Plane->transform->LocalScale = XMVectorSet(10.0f, 1.0f, 10.0f, 0.0f);
 
 
 		C1->transform->Position = XMVectorSet(-2.0f, 0.0f, 0.0f, 0.0f);
-		C1->transform->LocalScale = XMVectorSet(0.5f, 0.5f, 0.5f, 0.0f);
+		C1->transform->LocalScale = XMVectorSet(0.1f, 0.1f, 0.1f, 0.0f);
 
-		C2->transform->Position = XMVectorSet(0.0f, 2.1f, 0.0f, 0.0f);
+		C2->transform->Position = XMVectorSet(-10.0f, 2.1f, 0.0f, 0.0f);
 		C2->transform->LocalScale = XMVectorSet(0.1f, 0.1f, 0.1f, 0.0f);
 
 		C3->transform->Position = XMVectorSet(-2.2f, 0.0f, 0.0f, 0.0f);
@@ -189,7 +204,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 
 		Framework::instanse().camera = cam;
-		Controller* cont = new Controller(2.0f, 5.0f);
+		Controller* controller = new Controller(2.0f, 5.0f);
 		//RotateQ *rotateQ = new RotateQ(30.0f/FRAME_RATE, XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
 		RotateQ *RotQ111 = new RotateQ(30.0f / FRAME_RATE, XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
 
@@ -204,26 +219,31 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//Pyramid->AddComponent(rotateQ);
 
 		//gameobject->AddComponent(trans);
+		PointLight * lightblue = new PointLight(XMFLOAT4(0.0f,0.0f,1.0f,1.0f),3.0f,0);
+		PointLight * lightred = new PointLight(XMFLOAT4(1.0f, 0.0f, 0.0f, 0.0f), 3.0f, 1);
 
 		Player->AddComponent(cam);
-		Player->AddComponent(cont);
+		Player->AddComponent(controller);
+		Player->AddComponent(lightblue);
+
 		Player->transform->Position = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
 		//C1->AddComponent(rotatearound);
 		C1->AddComponent(rotatearoundY);
-		C1->AddComponent(CubeMR);
-		//C1->AddComponent(RotQ);
+		C1->AddComponent(torus);
+
 		C2->AddComponent(Fish);
 		//C2->AddComponent(rotatearoundX);
 
 		C3->AddComponent(CubeTex);
 		C3->AddComponent(rotatearoundZ);
+		C3->AddComponent(lightred);
 
 		//Pyramid->AddComponent(rotatearound2);
 		//P1->AddComponent(rotateQ);
 		//P1->AddComponent(rotateQ);
 		//P1->AddComponent(RotQ111);
-		P1->AddComponent(PyrMR);
+		//P1->AddComponent(PyrMR);
 
 		Plane->AddComponent(PlaneTexture);
 

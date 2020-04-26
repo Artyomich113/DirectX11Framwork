@@ -6,6 +6,8 @@
 #include "Gameobject.h"
 #include "resource.h"
 #include "SystemDefs.h"
+#include "DirectiinalLight.h"
+#include "PointLight.h"
 #include "Mouse/MouseClass.h"
 #include <string>
 #include <cstring>
@@ -32,6 +34,7 @@ public:
 	}
 	bool IsRunning;
 	std::map<Component::Layout,shared<std::list<Component*>>> ComponentsByLayout;
+
 	MouseClass mouse;
 	bool Initialize(std::string name);
 	Camera* camera;
@@ -48,7 +51,8 @@ public:
 	HINSTANCE g_hIns;
 	HWND g_hWnd;
 
-
+	PointLight * pointLights[2];
+	DirectionalLight * DirLight;
 	float RunStartTime;
 	float curtime;
 	float cosTime;

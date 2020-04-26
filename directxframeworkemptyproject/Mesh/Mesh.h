@@ -49,8 +49,18 @@ struct ConstantBuffer
 	XMMATRIX mView;			// Матрица вида
 	XMMATRIX mProjection;	// Матрица проекции
 	XMFLOAT4 CameraPos;
+	XMFLOAT4 LightColor;
+	XMFLOAT4 LightDir;
+	XMFLOAT4 pointLightPos[2];
+	XMFLOAT4 pointLightColors[2];
+	float pointLightPower[2];
 	float costime;
 	float curtime;
+};
+
+struct LightBuffer
+{
+
 };
 //
 //struct ConstantBufferUI

@@ -127,6 +127,7 @@
   <ItemGroup>
     <ClCompile Include="Behaviour.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="DirectiinalLight.cpp" />
     <ClCompile Include="DXManager.cpp" />
     <ClCompile Include="Framework.cpp" />
     <ClCompile Include="Gameobject.cpp" />
@@ -137,6 +138,7 @@
     <ClCompile Include="Mesh\MeshRendererUI.cpp" />
     <ClCompile Include="Mouse\MouseClass.cpp" />
     <ClCompile Include="Mouse\MouseEvent.cpp" />
+    <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>
@@ -144,6 +146,7 @@
     <ClInclude Include="Behaviour.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="DirectiinalLight.h" />
     <ClInclude Include="DXManager.h" />
     <ClInclude Include="Framework.h" />
     <ClInclude Include="Gameobject.h" />
@@ -155,6 +158,7 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="Mouse\MouseClass.h" />
     <ClInclude Include="Mouse\MouseEvent.h" />
+    <ClInclude Include="PointLight.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SimpleMath.h" />
     <ClInclude Include="SystemDefs.h" />

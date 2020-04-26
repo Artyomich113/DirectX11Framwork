@@ -28,8 +28,13 @@ Framework::Framework()
 	}
 	IsRunning = true;
 
-	ComponentsByLayout.insert( std::pair<Component::Layout,shared<std::list<Component*>>>(Component::Layout::GameLogic, shared<std::list<Component*>>(new std::list<Component*>)));
-	ComponentsByLayout.insert( std::pair<Component::Layout, shared<std::list<Component*>>>(Component::Layout::Render, shared<std::list<Component*>>(new std::list<Component*>)));
+	shared<std::list<Component*>> game = shared<std::list<Component*>>(new std::list<Component*>);
+	//game->capacity = 100;
+	shared<std::list<Component*>> render = shared<std::list<Component*>>(new std::list<Component*>);
+	//render->capacity = 100;
+
+	ComponentsByLayout.insert( std::pair<Component::Layout,shared<std::list<Component*>>> (Component::Layout::GameLogic, game/*shared<std::vector<Component*>>(new std::vector<Component*>))*/));//std::pair<Component::Layout,shared<std::list<Component*>>>
+	ComponentsByLayout.insert( std::pair<Component::Layout, shared<std::list<Component*>>>(Component::Layout::Render, render));
 }
 
 void Framework::proceedAllGameobjects()

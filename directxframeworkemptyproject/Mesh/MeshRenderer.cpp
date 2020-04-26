@@ -66,7 +66,7 @@ HRESULT MeshRenderer::InitMesh()
 
 	// Создание константного буфера
 	bd.Usage = D3D11_USAGE_DEFAULT;
-	std::cout << "bytewidth" << sizeof(ConstantBuffer);
+	//std::cout << "bytewidth" << sizeof(ConstantBuffer);
 	bd.ByteWidth = sizeof(ConstantBuffer);		// размер буфера = размеру структуры
 	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;	// тип - константный буфер
 	bd.CPUAccessFlags = 0;
@@ -107,11 +107,6 @@ D3D11_INPUT_ELEMENT_DESC * MeshRenderer::layout()
 	D3D11_INPUT_ELEMENT_DESC *layout = new D3D11_INPUT_ELEMENT_DESC[2];
 	layout[0] = { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 };
 	layout[1] = { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 };
-	/*D3D11_INPUT_ELEMENT_DESC layout[] =
-	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	};*/
 	
 	std::cout << "\nReturning Layout " << layout;
 	return layout;
@@ -120,7 +115,7 @@ D3D11_INPUT_ELEMENT_DESC * MeshRenderer::layout()
 UINT MeshRenderer::NumberOfElements()
 {
 std::cout << "\nreturning number of elements " << 2;
-	return (UINT)2;//ARRAYSIZE(layout);
+	return (UINT)2;
 }
 
 inline void MeshRenderer::process()
@@ -145,10 +140,12 @@ inline void MeshRenderer::process()
 	//std::cout << "\ng_Projection";
 	//cb.mProjection = XMMatrixTranspose(Framework::instanse().camera->GetProjection());
 	cb.mProjection = XMMatrixTranspose(Framework::instanse().camera->g_Projection);
+	cb.CameraPos = Framework::instanse().camera->gameobject->transform->Position.m128_f32;
+	cb.LightColor = Framework::instanse().DirLight->lightColor;
+	cb.LightDir = Framework::instanse().DirLight->lightDirection.m128_f32;
 	cb.costime = Framework::instanse().cosTime;
 	cb.curtime = Framework::instanse().curtime;
-	cb.CameraPos = Framework::instanse().camera->gameobject->transform->Position.m128_f32;
-	
+
 	//std::cout << "\nsubresource";
 	UINT stride = sizeof(SimpleVertex);
 	UINT offset = 0;

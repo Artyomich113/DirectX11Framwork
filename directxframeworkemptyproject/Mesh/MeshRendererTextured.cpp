@@ -34,16 +34,16 @@ HRESULT MeshRendererTextured::InitMesh()
 	D3D11_SUBRESOURCE_DATA InitData;	// Структура, содержащая данные буфера
 	//std::cout << "\nzero memory";
 	ZeroMemory(&InitData, sizeof(InitData));	// очищаем ее
-	InitData.pSysMem = Vertices;			
+	InitData.pSysMem = Vertices;
 	// Вызов метода g_pd3dDevice создаст объект буфера вершин
 	/*for (int i = 0; i < NumOfVerteces + 5; i++)
 	{
 		std::cout << i << ")" << Vertices[i].TexPos.x << " " << Vertices[i].TexPos.y << "\n";
 	}*/
-	std::cout << "create vertex buffer ind " << NumOfVerteces << "\n" 
-	<< " byte width " << bd.ByteWidth << "\n" 
-	<< "sizeof " << sizeof(TexturedVertex) << "\n"
-	<< "mem "<< InitData.pSysMem << "\n" ;
+	std::cout << "create vertex buffer ind " << NumOfVerteces << "\n"
+		<< " byte width " << bd.ByteWidth << "\n"
+		<< "sizeof " << sizeof(TexturedVertex) << "\n"
+		<< "mem " << InitData.pSysMem << "\n";
 	hr = dxmanager->m_device->CreateBuffer(&bd, &InitData, &g_pVertexBuffer);
 	std::cout << "buffer created\n";
 	if (FAILED(hr))
@@ -51,7 +51,7 @@ HRESULT MeshRendererTextured::InitMesh()
 		std::cout << "failed create vertices buffer " << NumOfVerteces << " verteces\n";
 		return hr;
 	}
-
+	ZeroMemory(&bd, sizeof(bd)); //
 	bd.Usage = D3D11_USAGE_DEFAULT;		// Структура, описывающая создаваемый буфер
 	bd.ByteWidth = sizeof(WORD) * NumOfIndexes;	// для 6 треугольников необходимо 18 вершин
 	bd.BindFlags = D3D11_BIND_INDEX_BUFFER; // тип - буфер индексов
@@ -75,7 +75,7 @@ HRESULT MeshRendererTextured::InitMesh()
 	bd.Usage = D3D11_USAGE_DEFAULT;
 
 	bd.ByteWidth = sizeof(ConstantBuffer);		// размер буфера = размеру структуры
-	std::cout << "text ConstantBuffer width " << sizeof(ConstantBuffer) << std::endl;
+	//std::cout << "text ConstantBuffer width " << sizeof(ConstantBuffer) << std::endl;
 	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;	// тип - константный буфер
 	bd.CPUAccessFlags = 0;
 
@@ -101,7 +101,7 @@ HRESULT MeshRendererTextured::InitMesh()
 	sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 	sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
 	sampDesc.MinLOD = 0;
-	sampDesc.MaxLOD = 10;
+	sampDesc.MaxLOD = 4;
 	// Создаем интерфейс сэмпла текстурирования
 	hr = dxmanager->m_device->CreateSamplerState(&sampDesc, &g_pSamplerLinear);
 	if (FAILED(hr))
@@ -327,6 +327,17 @@ void MeshRendererTextured::process()
 	cb.mView = XMMatrixTranspose(Framework::instanse().camera->g_view);
 	cb.mProjection = XMMatrixTranspose(Framework::instanse().camera->g_Projection);
 	cb.CameraPos = Framework::instanse().camera->gameobject->transform->Position.m128_f32;
+	cb.LightColor = Framework::instanse().DirLight->lightColor;
+	cb.LightDir = Framework::instanse().DirLight->lightDirection.m128_f32;
+
+	cb.pointLightColors[0] = Framework::instanse().pointLights[0]->lightColor;
+	cb.pointLightColors[1] = Framework::instanse().pointLights[1]->lightColor;
+
+	cb.pointLightPos[0] = Framework::instanse().pointLights[0]->lightPos.m128_f32;
+	cb.pointLightPos[1] = Framework::instanse().pointLights[1]->lightPos.m128_f32;
+	
+	cb.pointLightPower[0] = Framework::instanse().pointLights[0]->lightPower;
+	cb.pointLightPower[1] = Framework::instanse().pointLights[1]->lightPower;
 
 	cb.costime = Framework::instanse().cosTime;
 	cb.curtime = Framework::instanse().curtime;
@@ -351,6 +362,8 @@ void MeshRendererTextured::process()
 	id3d11devicecontext->VSSetShader(shaderPointers.m_VertexShader, NULL, 0);
 	id3d11devicecontext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
 	id3d11devicecontext->PSSetShader(shaderPointers.m_PixelShader, NULL, 0);
+
+	id3d11devicecontext->PSSetConstantBuffers(0, 1, &g_pConstantBuffer);
 
 	id3d11devicecontext->PSSetShaderResources(0, 1, &g_pTextureRV);
 	id3d11devicecontext->PSSetSamplers(0, 1, &g_pSamplerLinear);

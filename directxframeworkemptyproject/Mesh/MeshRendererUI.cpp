@@ -123,6 +123,8 @@ void MeshRendererUI::process()
 	cb.mProjection = XMMatrixTranspose(XMMatrixScaling(1.0f,1.0f,0.0f));
 	cb.CameraPos = Framework::instanse().camera->gameobject->transform->Position.m128_f32;
 
+	cb.LightColor = Framework::instanse().DirLight->lightColor;
+	cb.LightDir = Framework::instanse().DirLight->lightDirection.m128_f32;
 	cb.costime = Framework::instanse().cosTime;
 	cb.curtime = Framework::instanse().curtime;
 

@@ -90,6 +90,14 @@ void Controller::process()
 	{
 		gameobject->transform->Translate(gameobject->transform->Right() * speed * FIXED_DELTA_TIME);
 	}
+	if (GetKeyState('E') & 0x8000)
+	{
+		gameobject->transform->Translate(gameobject->transform->Up() * speed * FIXED_DELTA_TIME);
+	}
+	if (GetKeyState('Q') & 0x8000)
+	{
+		gameobject->transform->Translate(gameobject->transform->Down() * speed * FIXED_DELTA_TIME);
+	}
 	
 	//gameobject->transform->Rotate(XMVectorSet(0.0f,1.0f,0.0f,0.0f) ,angle * Framework::instanse().mouse.RawInput.x);
 	//gameobject->transform->Rotate(XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f), angle * Framework::instanse().mouse.RawInput.y);
